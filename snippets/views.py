@@ -1,25 +1,31 @@
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework import mixins, permissions
+from rest_framework import mixins, permissions, viewsets, renderers
 from django.contrib.auth.models import User as Admin
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from snippets.models import Snippet, User
 from snippets.serializers import SnippetSerializer, UserSerializer, AdminSerializer
 from snippets.permissions import IsOwnerOrReadOnly
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'snippets': reverse('snippet-list', request=request, format=format),
-    })
+class SnippetViewSet(viewsets.ModelViewSet):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    def highlight(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
-class FindAllAdmins(generics.ListAPIView):
+class AdminList(generics.ListAPIView):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -46,11 +52,6 @@ class FindSnippetById(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
-class FindAllSnippets(generics.ListAPIView):
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-
-
 class Snippets(mixins.CreateModelMixin,
                mixins.ListModelMixin,
                generics.GenericAPIView, ):
@@ -61,8 +62,8 @@ class Snippets(mixins.CreateModelMixin,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
