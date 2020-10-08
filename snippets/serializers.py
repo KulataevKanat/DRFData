@@ -6,7 +6,7 @@ from snippets.models import Snippet, User \
     # , LANGUAGE_CHOICES, STYLE_CHOICES
 
 
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     # id = serializers.IntegerField(read_only=True)
     # title = serializers.CharField(required=False, allow_blank=True, max_length=100)
     # code = serializers.CharField(style={'base_template': 'textarea.html'})
@@ -15,10 +15,11 @@ class SnippetSerializer(serializers.ModelSerializer):
     # style = serializers.ChoiceField(choices=STYLE_CHOICES, default='friendly')
 
     owner = serializers.ReadOnlyField(source='owner.username')
+    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
 
     class Meta:
         model = Snippet
-        fields = ('id', 'created', 'title', 'code', 'linenos', 'language', 'style', 'owner')
+        fields = ('url', 'id', 'highlight', 'created', 'title', 'code', 'linenos', 'language', 'style', 'owner')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,9 +52,10 @@ class UserSerializer(serializers.ModelSerializer):
             raise Http404
 
 
-class AdminSerializer(serializers.ModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+class AdminSerializer(serializers.HyperlinkedModelSerializer):
+    # snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
 
     class Meta:
         model = Admin
-        fields = ('id', 'username', 'snippets')
+        fields = ('url', 'id', 'username', 'snippets')
