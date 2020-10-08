@@ -8,12 +8,13 @@ urlpatterns = [
     url('snippet/view', views.Snippets.as_view()),
     url('snippet/findById/(?P<id>[0-9]+)/', views.FindSnippetById.as_view()),
     url('snippet/changeView/(?P<id>[0-9]+)/', views.DeletePutSnippetById.as_view()),
+    url('snippet/', views.Snippets.as_view()),
 
     # Users
     url('user/view', views.GetCreateUser.as_view()),
-    url('user/deleteById/(?P<id>[0-9]+)/', views.Users.deleteById),
-    url('user/update/(?P<id>[0-9]+)/', views.Users.change),
-    url('user/findById/(?P<id>[0-9]+)/', views.Users.findById),
+    url('user/deleteById/(?P<id>[0-9]+)/', views.User.deleteById),
+    url('user/update/(?P<id>[0-9]+)/', views.User.change),
+    url('user/findById/(?P<id>[0-9]+)/', views.User.findById),
     # AuthUser
     url('admin/findAll/', views.AdminList.as_view()),
     url('admin/findById/(?P<id>[0-9]+)/', views.FindAdminById.as_view()),

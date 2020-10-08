@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User as Admin
-from snippets.models import Snippet, User \
+from snippets.models import Snippet, Users \
     # , LANGUAGE_CHOICES, STYLE_CHOICES
 
 
@@ -22,9 +22,9 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'id', 'highlight', 'created', 'title', 'code', 'linenos', 'language', 'style', 'owner')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UsersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Users
         fields = ('id', 'name', 'surname')
 
     @staticmethod
@@ -35,8 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def change(request, id):
-        user = User.objects.get(id=id)
-        serializer = UserSerializer(user, data=request.data)
+        user = Users.objects.get(id=id)
+        serializer = UsersSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -45,10 +45,10 @@ class UserSerializer(serializers.ModelSerializer):
     @staticmethod
     def findById(id):
         try:
-            user = User.objects.get(id=id)
-            serializer = UserSerializer(user)
+            user = Users.objects.get(id=id)
+            serializer = UsersSerializer(user)
             return Response(serializer.data)
-        except User.DoesNotExist:
+        except Users.DoesNotExist:
             raise Http404
 
 
@@ -58,4 +58,4 @@ class AdminSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Admin
-        fields = ('url', 'id', 'username', 'snippets')
+        fields = ('id', 'username', 'snippets')

@@ -6,11 +6,12 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from snippets.models import Snippet, User
-from snippets.serializers import SnippetSerializer, UserSerializer, AdminSerializer
+from snippets.models import Snippet, Users
+from snippets.serializers import SnippetSerializer, UsersSerializer, AdminSerializer
 from snippets.permissions import IsOwnerOrReadOnly
 
 
+# ViewSets
 class SnippetViewSet(viewsets.ModelViewSet):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
@@ -25,6 +26,19 @@ class SnippetViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
+class AdminViewSet(viewsets.ModelViewSet):
+    queryset = Admin.objects.all()
+    serializer_class = AdminSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = Users.objects.all()
+    serializer_class = UsersSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+
+# Snippet Classes
 class AdminList(generics.ListAPIView):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
@@ -52,6 +66,7 @@ class FindSnippetById(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
+# Snippet Methods
 class Snippets(mixins.CreateModelMixin,
                mixins.ListModelMixin,
                generics.GenericAPIView, ):
@@ -62,28 +77,30 @@ class Snippets(mixins.CreateModelMixin,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    # def get(self, request, *args, **kwargs):
-    #     return self.list(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
+# User Classes
 class GetCreateUser(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = Users.objects.all()
+    serializer_class = UsersSerializer
 
 
-class Users(APIView):
+# User Methods
+class User(APIView):
 
     @api_view(['DELETE'])
     def deleteById(self, id):
-        return UserSerializer.deleteById(id)
+        return UsersSerializer.deleteById(id)
 
     @api_view(['PUT'])
     def change(self, id):
-        return UserSerializer.change(self, id)
+        return UsersSerializer.change(self, id)
 
     @api_view(['GET'])
     def findById(self, id):
-        return UserSerializer.findById(id)
+        return UsersSerializer.findById(id)

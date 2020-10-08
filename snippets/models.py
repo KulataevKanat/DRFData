@@ -38,6 +38,6 @@ class Snippet(BaseModel):
         super(Snippet, self).save(*args, **kwargs)
 
 
-class User(BaseModel):
+class Users(BaseModel):
     name = models.CharField(max_length=20, blank=True, default='admin')
     surname = models.CharField(max_length=30, blank=True, default='admin')
