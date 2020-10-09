@@ -41,3 +41,6 @@ class Snippet(BaseModel):
 class Users(BaseModel):
     name = models.CharField(max_length=20, blank=True, default='admin')
     surname = models.CharField(max_length=30, blank=True, default='admin')
+
+    class Meta:
+        verbose_name_plural = "user"
