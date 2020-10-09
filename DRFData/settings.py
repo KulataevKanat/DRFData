@@ -36,13 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'snippets'
+    'snippets',
+    'employment'
 
 ]
 
-REST_FRAMEWORK = {
-    'PAGE_SIZE': 13
-}
+# REST_FRAMEWORK = {
+#     'PAGE_SIZE': 13
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,8 +87,28 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
 
+        'applications': [
+            'snippets',  # все модели в some_app
+        ],
+
+    },
+    'employment': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Employment',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+
+        'applications': [
+            'employment',  # все модели в some_app
+        ],
     }
 }
+
+DATABASE_ROUTERS = [
+    'dbrouter.DbByAppRouter'
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
