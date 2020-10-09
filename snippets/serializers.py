@@ -29,7 +29,7 @@ class UsersSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def deleteById(id):
-        user = User.objects.get(id=id)
+        user = Users.objects.get(id=id)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
