@@ -2,15 +2,20 @@ from rest_framework import generics
 from rest_framework import viewsets
 
 from employment.models import Employment, Users
-from employment.serializers import EmploymentSerializers, UserSerializer
+from employment.serializers import EmploymentSerializers, UserSerializer, CreateEmploymentSerializers
 
 
-class EmploymentViewSet(viewsets.ModelViewSet):
+class EmploymentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Employment.objects.using('employment').all()
     serializer_class = EmploymentSerializers
 
 
-class FindEmploymentByBarcode(generics.RetrieveAPIView):
+class CreateEmploymentViewSet(viewsets.ModelViewSet):
+    queryset = Employment.objects.using('employment').all()
+    serializer_class = CreateEmploymentSerializers
+
+
+class FindEmploymentByBarcode(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'barcode'
     queryset = Employment.objects.using('employment').all()
     serializer_class = EmploymentSerializers
