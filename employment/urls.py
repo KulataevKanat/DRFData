@@ -9,5 +9,6 @@ router.register('users', views.UsersViewSet)
 
 urlpatterns = [
     url('', include(router.urls)),
+    url('employments/findByBarcode/(?P<barcode>[a-z0-9]+)/', views.FindEmploymentByBarcode.as_view()),
     url('api-auth/', include('rest_framework.urls', namespace='rest_employment'))
 ]
