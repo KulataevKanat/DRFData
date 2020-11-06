@@ -9,13 +9,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Employment(BaseModel):
-    created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=30, blank='true', default='employment')
-
-    # user = models.ForeignKey('models.Users', related_name='employment', on_delete=models.SET_DEFAULT, default='')
-
-
 class Users(BaseModel):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank='true', default='user_name')
@@ -24,3 +17,10 @@ class Users(BaseModel):
 
     class Meta:
         verbose_name_plural = "user"
+
+
+class Employment(BaseModel):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=30, blank='true', default='employment')
+    barcode = models.BigIntegerField(blank='True', default='2998060398046')
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, default='3')
