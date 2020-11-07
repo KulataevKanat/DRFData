@@ -4,10 +4,10 @@ from employment import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('create_employments', views.CreateEmploymentViewSet)
-router.register('findByBarcode', views.FindEmploymentByBarcode, basename='findByBarcode')
-router.register('employments', views.EmploymentViewSet)
-router.register('users', views.UsersViewSet)
+router.register('create_employments', views.CreateEmploymentViewSet, basename='create_employments'),
+router.register('findByBarcode', views.FindEmploymentByBarcode, basename='findByBarcode'),
+router.register('employments', views.EmploymentViewSet),
+router.register('users', views.UsersViewSet),
 
 urlpatterns = [
     url('', include(router.urls)),
