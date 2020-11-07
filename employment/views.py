@@ -1,4 +1,3 @@
-from rest_framework import generics
 from rest_framework import viewsets
 
 from employment.models import Employment, Users
@@ -10,15 +9,15 @@ class EmploymentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = EmploymentSerializers
 
 
-class CreateEmploymentViewSet(viewsets.ModelViewSet):
-    queryset = Employment.objects.using('employment').all()
-    serializer_class = CreateEmploymentSerializers
-
-
 class FindEmploymentByBarcode(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'barcode'
     queryset = Employment.objects.using('employment').all()
     serializer_class = EmploymentSerializers
+
+
+class CreateEmploymentViewSet(viewsets.ModelViewSet):
+    queryset = Employment.objects.using('employment').all()
+    serializer_class = CreateEmploymentSerializers
 
 
 class UsersViewSet(viewsets.ModelViewSet):
