@@ -10,9 +10,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CreateEmploymentSerializers(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = Employment
-        fields = ('url', 'id', 'created', 'name', 'user', 'barcode')
+        fields = ('id', 'created', 'name', 'user', 'barcode')
 
 
 class EmploymentSerializers(serializers.HyperlinkedModelSerializer):
